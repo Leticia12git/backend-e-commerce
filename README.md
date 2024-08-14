@@ -9,10 +9,12 @@ Este E-Commerce foi desenvolvido para fazer o ...
 - Spring Data JPA
 - MySQL
 - Docker Composer
-- Flyway
+
 
 
 ## Diagrama de UML 
+
+![img.png](img.png)
 
 
 
