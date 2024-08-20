@@ -1,8 +1,10 @@
 package edu.e_commerce.service;
 
+import edu.e_commerce.enums.UserEnum;
 import edu.e_commerce.model.User;
 import edu.e_commerce.repository.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -38,9 +40,14 @@ public class UserService {
      * @return
      */
     public User registerUser(User user) {
+        BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
+        String encryptedPassword = passwordEncoder.encode(user.getPassword());
+        user.setPassword(encryptedPassword);
+        user.setRole(UserEnum.ADMIN);
         User saved = userRepository.save(user);
         return saved;
     }
+
 
     /**
      * Este metodo deleta um usuario no banco de dados

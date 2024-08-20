@@ -22,18 +22,18 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @GetMapping
+    @GetMapping("/all")
     public List<User> register() {
         return userService.findAll();
     }
 
-    @PostMapping
+    @PostMapping("/create")
     public ResponseEntity<User> register(@RequestBody User user) {
         User saved = userService.registerUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
-    @DeleteMapping(value = "/{id}")
+    @DeleteMapping(name = "/delete", value = "/{id}")
     public ResponseEntity<User> deleteUser(Long id) {
         userService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
