@@ -1,15 +1,11 @@
 package edu.e_commerce.service;
 
 
-
-
 import edu.e_commerce.converter.UserConverter;
 import edu.e_commerce.dtos.request.UserRequest;
 import edu.e_commerce.dtos.response.UserResponse;
 import edu.e_commerce.model.User;
 import edu.e_commerce.repository.UserRepository;
-
-
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
@@ -49,11 +45,11 @@ public class UserService {
     }
 
     /**
+     * Este metodo registra um usuario
+     *
      * @param user
-     * @return
+     * @return user
      */
-
-
 
     public UserResponse registerUser(UserRequest user) {
         User newUser = new User();
@@ -66,13 +62,11 @@ public class UserService {
         return userConverter.convertEntityToDTO(savedUser);
     }
 
-
     /**
      * Este metodo deleta um usuario no banco de dados
      *
      * @param id
      */
-
     public void delete(Long id) {
         Optional<User> user = userRepository.findById(id);
         if (user.isPresent()) {

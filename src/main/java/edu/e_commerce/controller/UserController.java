@@ -29,20 +29,11 @@ public class UserController {
         return userService.findAll();
     }
 
-//    @PostMapping("/create")
-//    public ResponseEntity<User> register(@RequestBody UserRequest user) {
-//        User saved = userService.registerUser(user);
-//        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
-//    }
-
     @PostMapping("/create")
     public ResponseEntity<UserResponse> register(@RequestBody UserRequest user) {
         UserResponse saved = userService.registerUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
-
-
-
 
     @DeleteMapping(name = "/delete", value = "/{id}")
     public ResponseEntity<User> deleteUser(@PathVariable Long id) {
