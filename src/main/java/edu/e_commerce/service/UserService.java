@@ -1,8 +1,16 @@
 package edu.e_commerce.service;
 
-import edu.e_commerce.enums.UserEnum;
+
+
+
+import edu.e_commerce.converter.UserConverter;
+import edu.e_commerce.dtos.request.UserRequest;
+import edu.e_commerce.dtos.response.UserResponse;
 import edu.e_commerce.model.User;
 import edu.e_commerce.repository.UserRepository;
+
+
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -21,6 +29,13 @@ import java.util.Optional;
 public class UserService {
 
     @Autowired
+    private ModelMapper modelMapper;
+
+    @Autowired
+    private UserConverter userConverter;
+
+
+    @Autowired
     private UserRepository userRepository;
 
     /**
@@ -34,18 +49,21 @@ public class UserService {
     }
 
     /**
-     * Este metodo cria um usuario no banco de dados
-     *
      * @param user
      * @return
      */
-    public User registerUser(User user) {
+
+
+
+    public UserResponse registerUser(UserRequest user) {
+        User newUser = new User();
         BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-        String encryptedPassword = passwordEncoder.encode(user.getPassword());
-        user.setPassword(encryptedPassword);
-        user.setRole(UserEnum.ADMIN);
-        User saved = userRepository.save(user);
-        return saved;
+        String encryptedPassword = passwordEncoder.encode(user.password());
+        newUser.setEmail(user.email());
+        newUser.setPassword(encryptedPassword);
+        newUser.setRole(user.role());
+        User savedUser = userRepository.save(newUser);
+        return userConverter.convertEntityToDTO(savedUser);
     }
 
 

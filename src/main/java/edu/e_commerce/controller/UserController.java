@@ -1,5 +1,7 @@
 package edu.e_commerce.controller;
 
+import edu.e_commerce.dtos.request.UserRequest;
+import edu.e_commerce.dtos.response.UserResponse;
 import edu.e_commerce.model.User;
 import edu.e_commerce.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,14 +29,23 @@ public class UserController {
         return userService.findAll();
     }
 
+//    @PostMapping("/create")
+//    public ResponseEntity<User> register(@RequestBody UserRequest user) {
+//        User saved = userService.registerUser(user);
+//        return ResponseEntity.status(HttpStatus.CREATED).body(saved);
+//    }
+
     @PostMapping("/create")
-    public ResponseEntity<User> register(@RequestBody User user) {
-        User saved = userService.registerUser(user);
+    public ResponseEntity<UserResponse> register(@RequestBody UserRequest user) {
+        UserResponse saved = userService.registerUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
 
+
+
+
     @DeleteMapping(name = "/delete", value = "/{id}")
-    public ResponseEntity<User> deleteUser(Long id) {
+    public ResponseEntity<User> deleteUser(@PathVariable Long id) {
         userService.delete(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
