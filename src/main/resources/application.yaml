@@ -5,3 +5,7 @@ spring:
     hibernate:
       ddl-auto: update
       show-sql: true
+e:
+  commerce:
+    token:
+      secret: ${JWT_SECRET:secret-key}
