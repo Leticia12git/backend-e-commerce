@@ -15,12 +15,12 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
@@ -34,7 +34,6 @@ class UserServiceTest {
     @Mock
     private UserConverter userConverter;
 
-
     @Mock
     private UserEnum userEnum;
 
@@ -42,7 +41,6 @@ class UserServiceTest {
     private UserService userService;
 
     private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
-
 
     @Test
     @DisplayName("Sucess find all users")
@@ -52,7 +50,6 @@ class UserServiceTest {
         assertNotNull(response);
         assertEquals(1, response.size());
         assertEquals(User.class, response.get(0).getClass());
-
         assertEquals(user.getId(), response.get(0).getId());
         assertEquals(user.getEmail(), response.get(0).getEmail());
         assertEquals(user.getPassword(), response.get(0).getPassword());
@@ -66,7 +63,7 @@ class UserServiceTest {
 
     @Test
     @DisplayName("Sucess create user")
-    public void testRegisterUser() {
+    public void registerUser() {
         // Dados de entrada
         UserRequest userRequest = new UserRequest("santos@gmail.com", "123456789", UserEnum.ADMIN);
 
@@ -92,12 +89,18 @@ class UserServiceTest {
         verify(userRepository).save(any(User.class)); // Verifica se o método save foi chamado
         verify(userConverter).convertEntityToDTO(any(User.class)); // Verifica se o método convertEntityToDTO foi chamado
         assertEquals(true, passwordEncoder.matches(userRequest.password(), encodedPassword));
-
     }
 
     @Test
-    @DisplayName("Sucess delete user")
+    @DisplayName("Success delete user")
     void delete() {
+        // Arrange: configure mocks
+        Long userId = user.getId();
+        when(userRepository.findById(userId)).thenReturn(Optional.of(user)); // Simula que o usuário foi encontrado
+        doNothing().when(userRepository).deleteById(userId); // Simula que a exclusão não faz nada
+        // Act: call the service to delete the user
+        userService.delete(userId);
+        // Assert: verify that deleteById was called on the repository
+        verify(userRepository, times(1)).deleteById(userId);
     }
-
 }
