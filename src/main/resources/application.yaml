@@ -8,3 +8,11 @@ spring:
 e-commerce:
     token:
       secret: ${JWT_SECRET:secret-key}
+product:
+    image:
+      directory: C:/Users/letic/Projetos-Backend/e-commerce/images
+      servlet:
+        multipart:
+          enabled: true
+          max-file-size: 1GB
+          max-request-size: 1GB

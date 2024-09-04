@@ -2,17 +2,18 @@ package edu.e_commerce.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serial;
 import java.io.Serializable;
 
-@Getter
-@Setter
+@Data
 @Builder
+@EqualsAndHashCode(of = "id")
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
-@Table(name = "tb_product")
+
 public class Product implements Serializable {
 
     @Serial
@@ -25,6 +26,9 @@ public class Product implements Serializable {
 
     @Column(name = "name")
     private String name;
+
+    @Column(name = "image")
+    private String image;
 
     @Column(name = "quantity")
     private int quantity;

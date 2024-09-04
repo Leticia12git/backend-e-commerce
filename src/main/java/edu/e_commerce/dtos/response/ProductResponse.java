@@ -13,4 +13,5 @@ public class ProductResponse {
     private String name;
     private int quantity;
     private Double price;
+    private String image;
 }

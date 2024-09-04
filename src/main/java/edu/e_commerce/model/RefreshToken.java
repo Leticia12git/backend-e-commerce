@@ -1,17 +1,16 @@
 package edu.e_commerce.model;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serial;
 @Data
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity(name = "tb_refreshToken")
+@Entity
+@EqualsAndHashCode(of = "id")
+@Table(name = "tb_refreshToken")
 public class RefreshToken {
 
     @Serial
