@@ -70,4 +70,31 @@ class ProductServiceTest {
         verify(productRepository, times(1)).save(any(Product.class));
         verify(productConverter, times(1)).convertEntityToDTO(savedProduct);
     }
+
+
+    @Test
+    @DisplayName(value = "Sucess findAll products")
+    void findAll() {
+
+    }
+
+    @Test
+    @DisplayName(value = "Sucess find by Id  products")
+    void findById() {
+    }
+
+    @Test
+    @DisplayName(value = "Sucess update products")
+    void updateProduct(ProductRequest productRequest , Long id) {
+
+        ProductRequest productRequest = new ProductRequest();
+
+    }
+
+    @Test
+    @DisplayName(value = "Sucess delete  products")
+    void deleteProduct(Long id) {
+        ProductRequest productRequest = productRepository.deleteById(id);
+        verify(productRequest);
+    }
 }
