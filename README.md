@@ -14,8 +14,7 @@ Este E-Commerce foi desenvolvido para fazer o ...
 
 ## Diagrama de UML 
 
-![img.png](img.png)
-
+![image.png](image.png)
 
 
 ## Link para o Swagger 
