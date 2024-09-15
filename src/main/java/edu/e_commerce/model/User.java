@@ -19,6 +19,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity
+@EqualsAndHashCode(of = "id")
 @Table(name = "tb_user")
 public class User implements Serializable, UserDetails {
 
@@ -40,15 +41,12 @@ public class User implements Serializable, UserDetails {
     @Enumerated(EnumType.STRING)
     private UserEnum role;
 
-
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         if (this.role.getRole() == UserEnum.ADMIN.getRole())
             return List.of(new SimpleGrantedAuthority("ROLE_ADMIN"), new SimpleGrantedAuthority("ROLE_USER"));
         else return List.of(new SimpleGrantedAuthority("ROLE_USER"));
     }
-
 
     @Override
     public String getUsername() {

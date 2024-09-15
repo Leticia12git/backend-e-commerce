@@ -12,10 +12,14 @@ import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
 
+/**
+ * Classe responsavel pela regra de negocio de geracao do token
+ */
+
 @Service
 public class TokenService {
 
-    @Value("${e.commerce.token.secret}")
+    @Value("${e-commerce.token.secret}")
     private String secretKey;
 
 
@@ -57,7 +61,7 @@ public class TokenService {
     public String generateRefreshToken(User user) {
         try {
             Algorithm algorithm = Algorithm.HMAC256(secretKey);
-           return JWT.create()
+            return JWT.create()
                     .withIssuer("e-commerce")
                     .withSubject(user.getEmail())
                     .withExpiresAt(getRefreshTokenExpirationDate())

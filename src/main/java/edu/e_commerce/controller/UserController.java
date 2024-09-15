@@ -24,16 +24,36 @@ public class UserController {
     @Autowired
     private UserService userService;
 
+    /**
+     * Endpoint responsavel por listar todos os usuarios
+     *
+     * @return List<Users></Users>
+     */
+
     @GetMapping("/all")
-    public List<User> register() {
+    public List<User> findAllUsers() {
         return userService.findAll();
     }
 
+    /**
+     * Endpoint responsavel por cadastrar um usuario
+     *
+     * @param user
+     * @return User
+     */
+
     @PostMapping("/create")
-    public ResponseEntity<UserResponse> register(@RequestBody UserRequest user) {
+    public ResponseEntity<UserResponse> registerUser(@RequestBody UserRequest user) {
         UserResponse saved = userService.registerUser(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(saved);
     }
+
+    /**
+     * Endpoint responsavel por deleter um usuario
+     *
+     * @param id
+     * @return
+     */
 
     @DeleteMapping(name = "/delete", value = "/{id}")
     public ResponseEntity<User> deleteUser(@PathVariable Long id) {
