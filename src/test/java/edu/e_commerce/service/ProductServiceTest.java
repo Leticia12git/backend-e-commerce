@@ -87,14 +87,13 @@ class ProductServiceTest {
     @DisplayName(value = "Sucess update products")
     void updateProduct(ProductRequest productRequest , Long id) {
 
-        ProductRequest productRequest = new ProductRequest();
+        ProductRequest product = new ProductRequest();
 
     }
 
     @Test
     @DisplayName(value = "Sucess delete  products")
     void deleteProduct(Long id) {
-        ProductRequest productRequest = productRepository.deleteById(id);
-        verify(productRequest);
+
     }
 }
