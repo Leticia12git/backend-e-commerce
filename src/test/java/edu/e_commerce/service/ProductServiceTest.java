@@ -14,7 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.web.multipart.MultipartFile;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.*;
 
@@ -34,66 +34,74 @@ class ProductServiceTest {
     private ProductService productService;
 
     @Test
-    @DisplayName(value = "Sucesse create product")
-    public void registerProduct() throws Exception {
-        // Arrange
-        MultipartFile mockImage = mock(MultipartFile.class);
-        when(mockImage.getOriginalFilename()).thenReturn("test-image.png");
-        ProductRequest productRequest = new ProductRequest();
-        productRequest.setName("Product Name");
-        productRequest.setPrice(100.0);
-        productRequest.setImage(mockImage);
-        productRequest.setQuantity(10);
+    @DisplayName("")
+    void testRegisterProduct_Success() throws Exception {
+        ProductRequest request = new ProductRequest();
+        Product product = new Product();
+        when(uploadImage.saveImage(any(MultipartFile.class))).thenReturn("imagePath");
+        when(productRepository.save(any(Product.class))).thenReturn(product);
+        when(productConverter.convertEntityToDTO(any(Product.class))).thenReturn(new ProductResponse());
 
-        Product savedProduct = new Product();
-        savedProduct.setId(1L);
-        savedProduct.setName("Product Name");
-        savedProduct.setPrice(100.0);
-        savedProduct.setImage("");
-        savedProduct.setQuantity(10);
+        ProductResponse response = productService.registerProduct(request);
 
-        ProductResponse expectedResponse = new ProductResponse();
-        expectedResponse.setName("Product Name");
-        expectedResponse.setPrice(100.0);
-        expectedResponse.setImage("");
-        expectedResponse.setQuantity(10);
+        assertEquals("Product Name", response.getName());
+        assertEquals(100.0, response.getPrice());
+        verify(productRepository, times(1)).save(any(Product.class));
+    }
 
-        when(uploadImage.saveImage(any(MultipartFile.class))).thenReturn("");
-        when(productRepository.save(any(Product.class))).thenReturn(savedProduct);
-        when(productConverter.convertEntityToDTO(savedProduct)).thenReturn(expectedResponse);
+    @Test
+    @DisplayName("")
+    void testRegisterProduct_ImageUploadFailure() throws Exception {
+        ProductRequest request = new ProductRequest();
+        when(uploadImage.saveImage(any(MultipartFile.class))).thenThrow(new Exception("Upload failed"));
 
-        ProductResponse actualResponse = productService.registerProduct(productRequest);
+        Exception exception = assertThrows(Exception.class, () -> {
+            productService.registerProduct(request);
+        });
 
-        assertNotNull(actualResponse);
-        assertEquals(expectedResponse, actualResponse);
+        assertEquals("Upload failed", exception.getMessage());
+        verify(productRepository, times(0)).save(any(Product.class));
+    }
+
+
+    @Test
+    @DisplayName("")
+    void testRegisterProduct_SaveFailure() throws Exception {
+        ProductRequest request = new ProductRequest();
+        when(uploadImage.saveImage(any(MultipartFile.class))).thenReturn("imagePath");
+        when(productRepository.save(any(Product.class))).thenThrow(new RuntimeException("Database error"));
+
+        Exception exception = assertThrows(RuntimeException.class, () -> {
+            productService.registerProduct(request);
+        });
+
+        assertEquals("Database error", exception.getMessage());
         verify(uploadImage, times(1)).saveImage(any(MultipartFile.class));
         verify(productRepository, times(1)).save(any(Product.class));
-        verify(productConverter, times(1)).convertEntityToDTO(savedProduct);
     }
 
 
     @Test
-    @DisplayName(value = "Sucess findAll products")
-    void findAll() {
+    @DisplayName("")
+    void testRegisterProduct_InvalidQuantity() throws Exception {
+        ProductRequest request = new ProductRequest();
 
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            productService.registerProduct(request);
+        });
+        assertEquals("Quantity must be positive", exception.getMessage());
+        verify(productRepository, times(0)).save(any(Product.class));
     }
 
-    @Test
-    @DisplayName(value = "Sucess find by Id  products")
-    void findById() {
-    }
 
     @Test
-    @DisplayName(value = "Sucess update products")
-    void updateProduct(ProductRequest productRequest , Long id) {
-
-        ProductRequest product = new ProductRequest();
-
-    }
-
-    @Test
-    @DisplayName(value = "Sucess delete  products")
-    void deleteProduct(Long id) {
-
+    @DisplayName("")
+    void testRegisterProduct_NullImage() throws Exception {
+        ProductRequest request = new ProductRequest( );
+        Exception exception = assertThrows(IllegalArgumentException.class, () -> {
+            productService.registerProduct(request);
+        });
+        assertEquals("Image is required", exception.getMessage());
+        verify(productRepository, times(0)).save(any(Product.class));
     }
 }

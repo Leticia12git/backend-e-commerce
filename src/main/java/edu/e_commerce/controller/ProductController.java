@@ -22,6 +22,7 @@ import java.util.List;
  */
 
 @RestController
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/product")
 public class ProductController {
 
